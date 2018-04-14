@@ -12,7 +12,7 @@
 * @size        15/04/2018
  */
 
-package main
+package gonoverde
 
 import (
 	"fmt"
@@ -26,7 +26,14 @@ const (
 	FTRANSACOES = "transacoes.csv"
 )
 
-func main() {
+func Start() {
+
+	// pode executar
+	var canExec int
+
+	// desativando
+	// execucao
+	canExec = 0
 
 	// START
 	if len(os.Args) == 3 {
@@ -44,21 +51,28 @@ func main() {
 			// validando se o arquivo existe
 			if ExistsFile(FCo) {
 
-				fmt.Println("Arquivo existe " + FCONTAS)
+				// fmt.Println("Arquivo existe " + FCONTAS)
+				canExec++
 
 			} else {
 
 				fmt.Println(CyanCor("Arquivo " + FCONTAS + " não existe!"))
+				return
 			}
 
 			if ExistsFile(FTr) {
 
-				fmt.Println("Arquivo existe " + FTRANSACOES)
+				// fmt.Println("Arquivo existe " + FTRANSACOES)
+				canExec++
 
 			} else {
 
 				fmt.Println(CyanCor("Arquivo " + FTRANSACOES + " não existe!"))
+				return
 			}
+
+			fmt.Println(YellowCor("Pode Executar"))
+			DebClient()
 
 		} else {
 

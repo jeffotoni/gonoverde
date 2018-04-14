@@ -17,14 +17,14 @@ Uma conta pode​ assumir um valor negativo e não existe limite inferior para o
 Esta multa se aplica independente da conta se encontrar ou não com saldo  egativo antes da transação, mas não se aplica se a transação for um depósito.
 
 
-### Install Dependencies
+### Instalar Dependencias
 
 ```
 go get -v github.com/jeffotoni/gcolor
 
 ```
 
-### Start App with Run or Compile
+### Start com Run ou Compile
 
 ```
 git clone github.com/jeffotoni/gonoverde
