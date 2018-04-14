@@ -29,10 +29,12 @@ go get -v github.com/jeffotoni/gcolor
 ```
 git clone github.com/jeffotoni/gonoverde
 
-go run gonoverde.go
+//uma forma de executar
+go run gonoverde.go contas.csv transacoes.csv
 
+// pode compilar
 go build gonoverde.go
 
-./gonoverde
+./gonoverde contas.csv transacoes.csv
 
 ```
