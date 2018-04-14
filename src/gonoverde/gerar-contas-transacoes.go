@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	. "github.com/jeffotoni/gonoverde"
 	"log"
 	"math/rand"
 	"os"
@@ -43,22 +44,33 @@ const (
 
 func main() {
 
-	//matando o arquivo
-	err := os.Remove(FCONTAS)
+	// if o arquivo existir
+	// apagar para gerar
+	// uma nova versao
+	if ExistsFile(FCONTAS) {
 
-	// tratando o erro
-	if err != nil {
-		log.Println(err)
-		return
+		//matando o arquivo
+		err := os.Remove(FCONTAS)
+		// tratando o erro
+		if err != nil {
+			log.Println(err)
+			return
+		}
 	}
 
-	//matando o arquivo
-	err = os.Remove(FTRANSACOES)
+	// if o arquivo existir
+	// apagar para gerar
+	// uma nova versao
+	if ExistsFile(FTRANSACOES) {
 
-	// tratando o erro
-	if err != nil {
-		log.Println(err)
-		return
+		//matando o arquivo
+		err = os.Remove(FTRANSACOES)
+
+		// tratando o erro
+		if err != nil {
+			log.Println(err)
+			return
+		}
 	}
 
 	// if o arquivo nao existe cria e faz append no conteudo adicionado
