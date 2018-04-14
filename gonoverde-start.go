@@ -21,11 +21,6 @@ import (
 	"strings"
 )
 
-const (
-	FCONTAS     = "contas.csv"
-	FTRANSACOES = "transacoes.csv"
-)
-
 func Start() {
 
 	// pode executar

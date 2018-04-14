@@ -25,12 +25,6 @@ import (
 	"time"
 )
 
-const (
-	FCONTAS     = "contas.csv"
-	FTRANSACOES = "transacoes.csv"
-	LINHAS      = 100000
-)
-
 // gerar arquivo contas
 // para simular calculos
 // o arquivo tem o fomato
@@ -64,7 +58,7 @@ func main() {
 	if ExistsFile(FTRANSACOES) {
 
 		//matando o arquivo
-		err = os.Remove(FTRANSACOES)
+		err := os.Remove(FTRANSACOES)
 
 		// tratando o erro
 		if err != nil {
