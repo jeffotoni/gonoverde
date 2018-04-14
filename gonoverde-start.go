@@ -67,7 +67,7 @@ func Start() {
 			}
 
 			fmt.Println(YellowCor("Pode Executar"))
-			DebClient()
+			DebClient(FCo, FTr)
 
 		} else {
 
@@ -85,29 +85,4 @@ func Start() {
 		// opcoes na tela
 		PrintDefaults()
 	}
-}
-
-// Exists file in disck
-func ExistsFile(file string) bool {
-
-	if _, err := os.Stat(file); err != nil {
-
-		if os.IsNotExist(err) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func PrintDefaults() {
-
-	var help string
-
-	help = `	
-  Use: 
-   gonoverde [OPTION]...
-   or: gonoverde contas.csv transacoes.csv
-`
-	fmt.Println(CyanCor(help))
 }

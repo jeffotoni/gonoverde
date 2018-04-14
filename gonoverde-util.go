@@ -16,9 +16,31 @@ package gonoverde
 
 import (
 	"fmt"
+	. "github.com/jeffotoni/gcolor"
+	"os"
 )
 
-func DebClient() {
+// Exists file in disck
+func ExistsFile(file string) bool {
 
-	fmt.Println("Debita e deposita na conta do cliente")
+	if _, err := os.Stat(file); err != nil {
+
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func PrintDefaults() {
+
+	var help string
+
+	help = `	
+  Use: 
+   gonoverde [OPTION]...
+   or: gonoverde contas.csv transacoes.csv
+`
+	fmt.Println(CyanCor(help))
 }
