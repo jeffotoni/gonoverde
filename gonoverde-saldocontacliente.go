@@ -21,7 +21,6 @@ import (
 	"github.com/jeffotoni/gonoverde/gbolt"
 	"log"
 	"os"
-	"strings"
 )
 
 var errs error
@@ -58,14 +57,14 @@ func SaldoContaCliente(ContasFile, TransFile string) {
 	// estão ordenados ...
 	// Tudo correndo bem teremos todos os saldos no banco já no formato
 	// float da forma que precisamos para calcular
-	errs = LerFileSaveDb(ContasFile)
+	// errs = LerFileSaveDb(ContasFile)
 
-	if errs != nil {
+	// if errs != nil {
 
-		fmt.Println("Error ao ler aquivo " + ContasFile + " não poderemos continuar!")
-		log.Println(errs)
-		os.Exit(0)
-	}
+	// 	fmt.Println("Error ao ler aquivo " + ContasFile + " não poderemos continuar!")
+	// 	log.Println(errs)
+	// 	os.Exit(0)
+	// }
 
 	// agora vamos ler as transacoes e fazer os calculos para apresentar na tela
 	// para ler as transacoes iremos ler linha a linha para não estourar nossa
@@ -96,9 +95,7 @@ func SaldoContaCliente(ContasFile, TransFile string) {
 func LerFileSaveDb(ContasFile string) error {
 
 	// variaveis declaradas para evitar declaracoes dentro do loop
-	var linha, idConta, stringSaldo, stringSaldoBody, stringSaldoDecimal string
-	var Saldo float64
-	var vetorConta []string
+	var linha, idConta, SaldoInicialFloatString string
 
 	// Abre o arquivo
 	arquivo, err := os.Open(ContasFile)
@@ -124,35 +121,10 @@ func LerFileSaveDb(ContasFile string) error {
 
 		if linha != "" {
 
-			// vamos transformar o valor em decimal
-			// sera um float para que possamos
-			// fazer os calculos
-			vetorConta = strings.Split(linha, ",")
-
-			// get conta
-			idConta = vetorConta[0]
-
-			// get saldo
-			stringSaldo = vetorConta[1]
-
-			// colocar ponto nas duas ultimas posicoes
-			// gerando casas decimais da string
-
-			// somente o decimal sem as casas decimais
-			stringSaldoBody = stringSaldo[:len(stringSaldo)-2]
-
-			// somente o algarismo apos a virgula casas decimais
-			stringSaldoDecimal = Substr(stringSaldo, len(stringSaldo)-2, 2)
-
-			// gerando o saldo em float, com as casas decimais para efetuar os calculos
-			Saldo = StringToSaldoWithDecimal(stringSaldoBody, stringSaldoDecimal)
-
-			// convertendo float para string,
-			// float com duas casas decimais
-			SaldoFloatString := FloatToString(Saldo, 2)
+			idConta, SaldoInicialFloatString = IdContaSaldoString(linha)
 
 			// salvar nova banco idConta => Saldo
-			gbolt.Save(idConta, SaldoFloatString)
+			gbolt.Save(idConta, SaldoInicialFloatString)
 		}
 	}
 
@@ -167,7 +139,18 @@ func CalcularSaldoTransacoes(TransFile string) error {
 	// variaveis declaradas
 	// para evitar declaracoes
 	// dentro do loop
-	var linha string
+	var linha, idConta, ValorTransacaoStr, idContaTemp, SaldoIString string
+
+	var SaldoInicialFloat, SaldoFloatTotal, ValorTransacaoFloat float64
+
+	var VetorTransacao []float64
+
+	var j int
+
+	// set inicio
+	idContaTemp = ""
+	j = 0
+	SaldoFloatTotal = 0
 
 	// Abre o arquivo
 	arquivo, err := os.Open(TransFile)
@@ -183,6 +166,7 @@ func CalcularSaldoTransacoes(TransFile string) error {
 	// Cria um scanner que le cada linha do arquivo
 	scanner := bufio.NewScanner(arquivo)
 
+	// lendo arquivos e mostrando na tela
 	fmt.Println(YellowCor("Lendo " + TransFile + " e efetuando os Cálculos de Saldo!"))
 
 	// varrendo o arquivo
@@ -191,7 +175,114 @@ func CalcularSaldoTransacoes(TransFile string) error {
 		// get linha
 		linha = scanner.Text()
 
-		fmt.Println(linha)
+		// retornando IdConta e o valor da transacao
+		idConta, ValorTransacaoStr = IdContaSaldoString(linha)
+
+		// convertendo valor da transacao em float
+		ValorTransacaoFloat = StringToFloat(ValorTransacaoStr)
+
+		// fmt.Println("Conta: ", idConta)
+		// fmt.Println("transacao: ", ValorTransacaoStr)
+
+		// entrando
+		// pela primeira
+		// vez
+		if j == 0 {
+
+			// coloca no vetor
+			VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
+
+			// seta e
+			// nao ira entrar
+			// mais nesta condicao
+			j = 1
+
+		} else {
+
+			// se for igual armazena
+			// no vetor
+			if idContaTemp == idConta {
+
+				// preenchendo o vetor com valor da transacao
+				// de um cliente especifico
+				// isto só é possivel pq o arquivo está ordenado
+				VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
+
+			} else {
+
+				// buscar saldo inicial da conta
+				SaldoIString = gbolt.Get(idContaTemp)
+
+				// trasforma string em float do saldo
+				SaldoInicialFloat = StringToFloat(SaldoIString)
+
+				// Saldo
+				SaldoFloatTotal = FloatCasasDecimais(SaldoFloatTotal+SaldoInicialFloat, 2)
+
+				// saldo da conta
+				fmt.Println(SaldoInicialFloat)
+
+				//fmt.Println(SaldoInicialFloat)
+				//os.Exit(0)
+				// Encontrou outro codigo cliente
+				// Percorre o vetor faz os calculos do vetor e do cliente anterior
+				// Limpa o vetor e inicia seu preenchimento novamente
+				// com um novo codigo cliente
+				// Calculo do Saldo
+				for _, Tvalor := range VetorTransacao {
+
+					// O saldo de uma conta deve ser calculado a partir de seu saldo inicial, aplicando cada uma das
+					// transações relacionadas a esta conta. Depósitos devem aumentar o saldo da conta e débitos
+					// devem reduzir esse mesmo saldo, na medida do valor da transação.
+
+					// Uma conta pode​ assumir um valor negativo e não existe limite inferior para o saldo da conta.
+					// Contudo, cada transação de débito que termina deixando o saldo da conta negativo implica
+					// uma multa de R$ 5,00​ a ser descontada imediatamente. Esta multa se aplica independente da
+					// conta se encontrar ou não com saldo negativo antes da transação, mas não se aplica se a
+					// transação for um depósito
+
+					// transacao negativa
+					if Tvalor < 0 {
+
+						fmt.Println(Tvalor)
+
+					} else {
+
+						fmt.Println(Tvalor)
+
+					}
+
+					// converte para duas casas decimais
+					SaldoFloatTotal = FloatCasasDecimais(SaldoFloatTotal+(Tvalor), 2)
+				}
+
+				// total Saldo
+				fmt.Println("saldo total")
+				fmt.Println(SaldoFloatTotal)
+				fmt.Println("")
+
+				//fmt.Println("Conta fim: ", idConta)
+				//os.Exit(0)
+
+				// limpar vetor
+				// iniciar novamente
+				VetorTransacao = []float64{}
+				SaldoFloatTotal = 0
+
+				// carregando o vetor com idConta do proximo cliente
+				VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
+			}
+
+		}
+
+		// pegar o idConta e o valor da Transacao
+		//fmt.Println(linha)
+		//fmt.Println(idConta + "," + ValorTransacaoStr)
+		//fmt.Println("")
+
+		idContaTemp = idConta
+
+		//fmt.Println(gbolt.Get())_
 	}
 
 	return scanner.Err()
