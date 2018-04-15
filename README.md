@@ -18,6 +18,23 @@ Esta multa se aplica independente da conta se encontrar ou não com saldo  egati
 
 ### Estrutura do Programa
 
+```go
+- gonoverde
+	- gbolt
+		- gonoverde-gbolt.go
+	- src
+		- gonoverde
+			- main-gerar.go
+			- main.go
+			- contas.csv
+			- transacoes.csv
+
+	- gonoverde-eviroment.go
+	- gonoverde-saldocontacliente.go
+	- gonoverde-start.go
+	- gonoverde-util.go
+	
+```
 
 ### Instalar Dependencias para o projeto
 
