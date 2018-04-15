@@ -21,7 +21,7 @@ import (
 	"github.com/jeffotoni/gonoverde/gbolt"
 	"log"
 	"os"
-	"time"
+	//"time"
 )
 
 var errs error
@@ -220,13 +220,18 @@ func CalcularSaldoTransacoes(TransFile string) error {
 				// trasforma string em float do saldo
 				SaldoInicialFloat = StringToFloat(SaldoIString)
 
-				// Saldo
-				SaldoFloatTotal = FloatCasasDecimais(SaldoFloatTotal+SaldoInicialFloat, 2)
+				// saldo total
+				SaldoFloatTotal = SaldoFloatTotal + SaldoInicialFloat
 
 				// saldo da conta
 
-				fmt.Println(YellowCor("Saldo Inicial"))
-				fmt.Println(SaldoInicialFloat)
+				//fmt.Println(YellowCor("Saldo Inicial"))
+				//fmt.Println(SaldoFloatTotal)
+
+				// v0 := 50021.70
+				// v1 := -55040.89
+				// T := v0 + (v1)
+				// fmt.Println(FloatToStringVirgula(T, 2))
 
 				//fmt.Println(SaldoInicialFloat)
 				//os.Exit(0)
@@ -247,29 +252,51 @@ func CalcularSaldoTransacoes(TransFile string) error {
 					// conta se encontrar ou não com saldo negativo antes da transação, mas não se aplica se a
 					// transação for um depósito
 
-					// transacao negativa
-					if Tvalor < 0 {
-
-						fmt.Println(Tvalor)
-
-					} else {
-
-						fmt.Println(Tvalor)
-
-					}
+					SaldoFloatTotal = SaldoFloatTotal + Tvalor
 
 					// converte para duas casas decimais
-					SaldoFloatTotal = FloatCasasDecimais(SaldoFloatTotal+(Tvalor), 2)
+					//FloatCasasDecimais(ValorSubAdd, 2)
+
+					//multa := 0
+
+					// saldo da conta negativa
+					// multa de R$ 5,00
+					// mas aplica somente em Debitos Negativos
+					// transacoes de deposito nao  se aplica
+					if SaldoFloatTotal < 0 && Tvalor < 0 {
+
+						//multa = -5
+
+						//neg = 1
+						//negativo subtrai
+						//fmt.Println("saldo da conta negativo: ", idContaTemp)
+						//fmt.Println(SaldoFloatTotal)
+
+						// converte para duas casas decimais
+						SaldoFloatTotal = SaldoFloatTotal - 5
+
+						//fmt.Println("Saldo com multa: ", SaldoFloatTotal)
+						//time.Sleep(time.Second * 1)
+					}
+
+					//fmt.Println(multa, ":", FloatToStringVirgula(Tvalor, 2), ":", FloatToStringVirgula(SaldoFloatTotal, 2))
+					//fmt.Println(Tvalor, ":", SaldoFloatTotal)
 				}
 
+				//if neg == 1 {
+
+				fmt.Println(idContaTemp + "," + FloatToStringClean(SaldoFloatTotal, 2))
+
 				// total Saldo
-				fmt.Println(YellowCor("saldo total"))
-				fmt.Println(SaldoFloatTotal)
-				fmt.Println("")
+				//fmt.Println(YellowCor("saldo total da conta:"))
+				//fmt.Println(FloatToStringVirgula(SaldoFloatTotal, 2))
+				//fmt.Println("")
+				// neg = 0
 
-				time.Sleep(time.Second * 10)
+				//}
 
-				//fmt.Println("Conta fim: ", idConta)
+				//time.Sleep(time.Second * 10)
+				//fmt.Println("Conta fim: ", idContaTemp)
 				//os.Exit(0)
 
 				// limpar vetor
@@ -280,7 +307,6 @@ func CalcularSaldoTransacoes(TransFile string) error {
 				// carregando o vetor com idConta do proximo cliente
 				VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
 			}
-
 		}
 
 		// pegar o idConta e o valor da Transacao

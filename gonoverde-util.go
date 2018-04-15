@@ -72,6 +72,22 @@ func FloatToString(input_num float64, casaDecimal int) string {
 	return strconv.FormatFloat(input_num, 'f', casaDecimal, 64)
 }
 
+//convertendo float para string com virgula
+func FloatToStringVirgula(input_num float64, casaDecimal int) string {
+
+	// converte numero para string, manter duas casas decimais
+	v := strconv.FormatFloat(input_num, 'f', casaDecimal, 64)
+	return strings.Replace(v, ".", ",", -1)
+}
+
+// remover caracteres virgula ou ponto
+func FloatToStringClean(input_num float64, casaDecimal int) string {
+
+	// converte numero para string, manter duas casas decimais
+	v := strconv.FormatFloat(input_num, 'f', casaDecimal, 64)
+	return strings.Replace(v, ".", "", -1)
+}
+
 // convertendo de Float com casas decimais
 func FloatCasasDecimais(input_num float64, casaDecimal int) float64 {
 
