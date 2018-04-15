@@ -40,6 +40,8 @@ go build main-gerar.go
 ```
 go get -v github.com/jeffotoni/gcolor
 
+got get -u github.com/boltdb/bolt
+
 ```
 
 ### Start com Run ou Compile

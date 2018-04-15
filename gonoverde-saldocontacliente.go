@@ -17,9 +17,26 @@ package gonoverde
 import (
 	"fmt"
 	. "github.com/jeffotoni/gcolor"
+	"github.com/jeffotoni/gonoverde/gbolt"
+	"os"
 )
 
-func DebClient(ContasFile, TransFile string) {
+func SaldoContaCliente(ContasFile, TransFile string) {
+
+	// Testing boltdb database
+	// Start ping database
+	// Creating ping ok
+	gbolt.Save("Ping", "ok")
+
+	// Testing whether it was recorded
+	// and read on the boltdb, we
+	// recorded a Ping and then
+	// read it back.
+	if gbolt.Get("Ping") != "ok" {
+
+		fmt.Println("Services Error Data Base!")
+		os.Exit(1)
+	}
 
 	fmt.Println(PurpleCor("Debita e deposita na conta do cliente"))
 }

@@ -67,7 +67,11 @@ func Start() {
 			}
 
 			fmt.Println(YellowCor("Pode Executar"))
-			DebClient(FCo, FTr)
+
+			// iniciar o Calculo
+			// do saldo de cada
+			// conta
+			SaldoContaCliente(FCo, FTr)
 
 		} else {
 
