@@ -38,6 +38,11 @@ import (
 
 func main() {
 
+	fmt.Println("... gerando arquivos ...")
+	RuneTime()
+
+	//go func() {
+
 	// if o arquivo existir
 	// apagar para gerar
 	// uma nova versao
@@ -80,12 +85,15 @@ func main() {
 	}
 
 	// id conta
-	var idconta, j, quantTransacao int
+	var idconta, j, quantTransacao, countConta, countTrans int
 
 	// set
 	// zero
 	// J
 	j = 1
+
+	countConta = 0
+	countTrans = 0
 
 	// set a quantidade de
 	// transacoes que pode
@@ -173,6 +181,9 @@ func main() {
 				log.Println(err)
 			}
 
+			countConta++
+			countTrans++
+
 		} else {
 
 			// gera uma transacao
@@ -199,6 +210,8 @@ func main() {
 				idconta++
 				j = 0
 
+				countTrans++
+
 			} else {
 
 				// gera transacao
@@ -211,6 +224,8 @@ func main() {
 
 					log.Println(err)
 				}
+
+				countTrans++
 			}
 		}
 
@@ -223,8 +238,11 @@ func main() {
 	}
 
 	// show screen
-	fmt.Println("Arquivo " + FCONTAS + " gerado com sucesso!")
+	fmt.Println("\nArquivo "+FCONTAS+" gerado com sucesso, total de [", countConta, "] linhas")
+	fmt.Println("Arquivo "+FTRANSACOES+" gerado com sucesso, total de [", countTrans, "] linhas")
 	fmt.Println("Foi gerado " + strconv.Itoa(LINHAS) + " linhas.")
+
+	//}()
 
 	//fim
 }

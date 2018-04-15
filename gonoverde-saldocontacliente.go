@@ -112,7 +112,8 @@ func LerFileSaveDb(ContasFile string) error {
 	// Cria um scanner que le cada linha do arquivo
 	scanner := bufio.NewScanner(arquivo)
 
-	fmt.Println(YellowCor("Lendo " + ContasFile + " e salvando no banco!"))
+	fmt.Println(YellowCor("... Lendo " + ContasFile + " e salvando no banco! ..."))
+	// RuneTime()
 
 	// varrendo o arquivo
 	for scanner.Scan() {
@@ -168,9 +169,10 @@ func CalcularSaldoTransacoes(TransFile string) error {
 	scanner := bufio.NewScanner(arquivo)
 
 	// lendo arquivos e mostrando na tela
-	fmt.Println(YellowCor("Lendo " + TransFile + " e efetuando os Cálculos de Saldo!"))
+	fmt.Println(YellowCor("..... Lendo " + TransFile + " e efetuando os Cálculos de Saldo! ....."))
 	fmt.Println("")
 
+	// RuneTime()
 	// varrendo o arquivo
 	for scanner.Scan() {
 
