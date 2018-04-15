@@ -19,42 +19,52 @@ Esta multa se aplica independente da conta se encontrar ou não com saldo  egati
 ### Estrutura do Programa
 
 
+### Instalar Dependencias para o projeto
+
+```
+$ go get -v github.com/jeffotoni/gcolor
+
+$ got get -u github.com/boltdb/bolt
+
+```
+
+### Baixando o projeto no GitHub
+
+```
+git clone github.com/jeffotoni/gonoverde
+
+```
 
 ### Gerando Arquivos contas.csv e transacoes.csv
 
 Será gerado dois arquivos, onde contas terá os saldos iniciais das contas e não irá repetir no arquivo de contas, o arquivo de transações irá possuir varias transações de cada conta, os arquivos estão ordenados pelo id da conta.
 
 ```
+// entrando no src
+$ cd src/gonoverde
+
+// executar e gerar 
+// arquivos .csv
+$ go run main-gerar.go
+
+// caso queira compilar
+$ go build main-gerar.go
+
+// gerando os arquivos
+// contas.csv e transacoes.csv 
+$ ./main-gerar
+
+```
+
+### Calcular Balanço de conta Corrente
+
+```
 //uma forma de executar
-go run main-gerar.go
+$ go run gonoverde.go contas.csv transacoes.csv
 
 // pode compilar
-go build main-gerar.go
+$ go build gonoverde.go
 
-./main-gerar
-
-```
-
-### Instalar Dependencias
-
-```
-go get -v github.com/jeffotoni/gcolor
-
-got get -u github.com/boltdb/bolt
-
-```
-
-### Start com Run ou Compile
-
-```
-git clone github.com/jeffotoni/gonoverde
-
-//uma forma de executar
-go run gonoverde.go contas.csv transacoes.csv
-
-// pode compilar
-go build gonoverde.go
-
-./gonoverde contas.csv transacoes.csv
+$ ./gonoverde contas.csv transacoes.csv
 
 ```
