@@ -16,6 +16,24 @@ Uma conta pode​ assumir um valor negativo e não existe limite inferior para o
 
 Esta multa se aplica independente da conta se encontrar ou não com saldo  egativo antes da transação, mas não se aplica se a transação for um depósito.
 
+### Estrutura do Programa
+
+
+
+### Gerando Arquivos contas.csv e transacoes.csv
+
+Será gerado dois arquivos, onde contas terá os saldos iniciais das contas e não irá repetir no arquivo de contas, o arquivo de transações irá possuir varias transações de cada conta, os arquivos estão ordenados pelo id da conta.
+
+```
+//uma forma de executar
+go run main-gerar.go
+
+// pode compilar
+go build main-gerar.go
+
+./main-gerar
+
+```
 
 ### Instalar Dependencias
 
