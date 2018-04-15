@@ -21,6 +21,7 @@ import (
 	"github.com/jeffotoni/gonoverde/gbolt"
 	"log"
 	"os"
+	"time"
 )
 
 var errs error
@@ -168,6 +169,7 @@ func CalcularSaldoTransacoes(TransFile string) error {
 
 	// lendo arquivos e mostrando na tela
 	fmt.Println(YellowCor("Lendo " + TransFile + " e efetuando os Cálculos de Saldo!"))
+	fmt.Println("")
 
 	// varrendo o arquivo
 	for scanner.Scan() {
@@ -220,6 +222,8 @@ func CalcularSaldoTransacoes(TransFile string) error {
 				SaldoFloatTotal = FloatCasasDecimais(SaldoFloatTotal+SaldoInicialFloat, 2)
 
 				// saldo da conta
+
+				fmt.Println(YellowCor("Saldo Inicial"))
 				fmt.Println(SaldoInicialFloat)
 
 				//fmt.Println(SaldoInicialFloat)
@@ -257,9 +261,11 @@ func CalcularSaldoTransacoes(TransFile string) error {
 				}
 
 				// total Saldo
-				fmt.Println("saldo total")
+				fmt.Println(YellowCor("saldo total"))
 				fmt.Println(SaldoFloatTotal)
 				fmt.Println("")
+
+				time.Sleep(time.Second * 10)
 
 				//fmt.Println("Conta fim: ", idConta)
 				//os.Exit(0)
