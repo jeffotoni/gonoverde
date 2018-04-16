@@ -23,7 +23,7 @@ import (
 	"log"
 	"os"
 	"regexp"
-	//"strings"
+	"strings"
 	//"time"
 )
 
@@ -167,37 +167,53 @@ func LerFileSaveDb(ContasFile string) error {
 		// get linha
 		linha = scanner.Text()
 
+		// tem que possuir
+		// conteudo na linha
 		if linha != "" {
 
-			// retornando dados da linha em string
-			idConta, SaldoInicialFloatString, SaldoInicialString = IdContaSaldoString(linha)
+			// a linha tem que possuir somente uma virgula
+			quantVirg := strings.Count(linha, ",")
 
-			if idConta != "" && SaldoInicialString != "" {
+			// a linha deve
+			// possuir somente
+			// uma virgula
+			if quantVirg == 1 {
 
-				// salvar somente se for int e nao conter caracteres indesejaveis
-				// conta e saldo tem que possuir somente numeros
+				// retornando dados da linha em string
+				idConta, SaldoInicialFloatString, SaldoInicialString = IdContaSaldoString(linha)
 
-				re, _ := regexp.Compile(`[^0-9]`)
+				// se nao tiver valores gera error log
+				if idConta != "" && SaldoInicialString != "" {
 
-				// verdadeiro significa que
-				// a string possui caracteres
-				// falso significa que possui
-				// somente numeros
-				if !re.MatchString(idConta) && !re.MatchString(SaldoInicialString) {
+					// salvar somente se for int e nao conter caracteres indesejaveis
+					// conta e saldo tem que possuir somente numeros
 
-					// salvar nova banco idConta => Saldo
-					gbolt.Save(idConta, SaldoInicialFloatString)
+					re, _ := regexp.Compile(`[^0-9]`)
 
+					// verdadeiro significa que
+					// a string possui caracteres
+					// falso significa que possui
+					// somente numeros
+					if !re.MatchString(idConta) && !re.MatchString(SaldoInicialString) {
+
+						// salvar nova banco idConta => Saldo
+						gbolt.Save(idConta, SaldoInicialFloatString)
+
+					} else {
+
+						// gerar log de erro
+						WriteLog("O Arquivo " + ContasFile + ", foi encontrado o Idconta ou Saldo errados => idConta: " + idConta + " Saldo: " + SaldoInicialString)
+					}
 				} else {
 
-					// gerar log de erro
-					WriteLog("O Arquivo " + ContasFile + ", foi encontrado o Idconta ou Saldo errados => idConta: " + idConta + " Saldo: " + SaldoInicialString)
+					//gera log
+					WriteLog("O Arquivo " + ContasFile + ", foi encontrado Idconta ou Saldo vazios => idConta: " + idConta + " Saldo: " + SaldoInicialString)
 				}
 			} else {
 
-				//gera log
-				WriteLog("O Arquivo " + ContasFile + ", foi encontrado Idconta ou Saldo vazios => idConta: " + idConta + " Saldo: " + SaldoInicialString)
+				WriteLog("O Arquivo " + ContasFile + " contém varias virgulas, isto não é permitido!")
 			}
+
 		} else {
 
 			// gerar log
@@ -211,6 +227,10 @@ func LerFileSaveDb(ContasFile string) error {
 	return scanner.Err()
 }
 
+// fazendo o calculo com os dados da transacao
+// a funcao ira percorrer o arquivo de transacoes
+// pesquisar se tem saldo inicial
+// e apartir dai iniciar os calculos
 func CalcularSaldoTransacoes(TransFile string) error {
 
 	// variaveis declaradas
@@ -254,97 +274,129 @@ func CalcularSaldoTransacoes(TransFile string) error {
 		// get linha
 		linha = scanner.Text()
 
-		// retornando IdConta e o valor da transacao
-		idConta, ValorTransacaoStr, ValorTransacaoNotFloat = IdContaSaldoString(linha)
+		// testando linha vazia
+		if linha != "" {
 
-		if idConta != "" && ValorTransacaoNotFloat != "" {
+			// a linha tem que possuir somente uma virgula
+			quantVirg := strings.Count(linha, ",")
 
-			// validar o conteudo do arquivo
-			re, _ := regexp.Compile(`[^0-9]`)
+			// a linha deve
+			// possuir somente
+			// uma virgula
+			if quantVirg == 1 {
 
-			// verdadeiro significa que
-			// a string possui caracteres
-			// falso significa que possui
-			// somente numeros
-			if !re.MatchString(idConta) && !re.MatchString(ValorTransacaoNotFloat) {
+				// retornando IdConta e o valor da transacao
+				idConta, ValorTransacaoStr, ValorTransacaoNotFloat = IdContaSaldoString(linha)
 
-				// pode continuar..
-				// convertendo valor da transacao em float
-				ValorTransacaoFloat = StringToFloat(ValorTransacaoStr)
+				if idConta != "" && ValorTransacaoNotFloat != "" {
 
-				// entrando
-				// pela primeira
-				// vez
-				if j == 0 {
+					// validar o conteudo do arquivo
+					re, _ := regexp.Compile(`[^0-9]`)
 
-					// coloca no vetor
-					VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
+					// verdadeiro significa que
+					// a string possui caracteres
+					// falso significa que possui
+					// somente numeros
+					if !re.MatchString(idConta) && !re.MatchString(ValorTransacaoNotFloat) {
 
-					// seta e
-					// nao ira entrar
-					// mais nesta condicao
-					j = 1
+						// pode continuar..
+						// convertendo valor da transacao em float
+						ValorTransacaoFloat = StringToFloat(ValorTransacaoStr)
 
-				} else {
-
-					// se for igual armazena
-					// no vetor
-					if idContaTemp == idConta {
-
-						// preenchendo o vetor com valor da transacao
-						// de um cliente especifico
-						// isto só é possivel pq o arquivo está ordenado
-						VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
-
-					} else {
+						//fmt.Println(idConta)
 
 						// buscar saldo inicial da conta
-						SaldoIString = gbolt.Get(idContaTemp)
+						SaldoIString = gbolt.Get(idConta)
 
+						// validando se a conta
+						// tem saldo
+						// caso contrario
 						if SaldoIString == "" {
 
 							// mensagem de erro caso nao encontre o id da conta para pegar o saldo inicial
-							textError := "O Arquivo " + TransFile + " não foi encontrado o saldo da conta " + idContaTemp + " não foi encontrado no banco de dados!"
+							textError := "O Arquivo [" + TransFile + "] não foi encontrado o saldo da conta [" + idConta + "] não foi encontrado no banco de dados!"
 							// err := errors.New(textError)
 
 							// gerar log de erro
 							WriteLog(textError)
 
+							// nao existe
+							// o Saldo Inicial da conta
 							continue
 						}
 
-						// trasforma string em float do saldo
-						SaldoInicialFloat = StringToFloat(SaldoIString)
+						// entrando
+						// pela primeira
+						// vez
+						if j == 0 {
 
-						// saldo total
-						SaldoFloatTotal = SaldoFloatTotal + SaldoInicialFloat
+							// coloca no vetor
+							VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
 
-						// fazendo o calculo das transacoes
-						CalcularBalanco(idContaTemp, VetorTransacao, SaldoFloatTotal)
+							// seta e
+							// nao ira entrar
+							// mais nesta condicao
+							j = 1
 
-						// limpar vetor
-						// iniciar novamente
-						VetorTransacao = []float64{}
-						SaldoFloatTotal = 0
+						} else {
 
-						// carregando o vetor com idConta do proximo cliente
-						VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
+							// se for igual armazena
+							// no vetor
+							if idContaTemp == idConta {
+
+								// preenchendo o vetor com valor da transacao
+								// de um cliente especifico
+								// isto só é possivel pq o arquivo está ordenado
+								VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
+
+							} else {
+
+								// buscar saldo inicial da conta
+								// SaldoIString = gbolt.Get(idContaTemp)
+
+								// trasforma string em float do saldo
+								SaldoInicialFloat = StringToFloat(SaldoIString)
+
+								// saldo total
+								SaldoFloatTotal = SaldoFloatTotal + SaldoInicialFloat
+
+								// fazendo o calculo das transacoes
+								CalcularBalanco(idContaTemp, VetorTransacao, SaldoFloatTotal)
+
+								// limpar vetor
+								// iniciar novamente
+								VetorTransacao = []float64{}
+								SaldoFloatTotal = 0
+
+								// carregando o vetor com idConta do proximo cliente
+								VetorTransacao = append(VetorTransacao, ValorTransacaoFloat)
+							}
+						}
+
+						// pegar o idConta
+						idContaTemp = idConta
+
+					} else {
+
+						// gerar log de erro
+						WriteLog("O Arquivo [" + TransFile + "], foi encontrado o Idconta ou Transacao errados => idConta: [" + idConta + "] Transacao: " + ValorTransacaoNotFloat)
 					}
+
+				} else {
+
+					WriteLog("O Arquivo [" + TransFile + "] não conseguimos ler o id Conta e o Saldo !")
 				}
 
-				// pegar o idConta
-				idContaTemp = idConta
+			} else { // varias virgulas ou uma
 
-			} else {
-
-				// gerar log de erro
-				WriteLog("O Arquivo " + TransFile + ", foi encontrado o Idconta ou Transacao errados => idConta: " + idConta + " Transacao: " + ValorTransacaoNotFloat)
+				WriteLog("O Arquivo [" + TransFile + "] contém varias virgulas isto não é permitido!")
 			}
 
-		} else {
+		} else { // linha vazia
 
-			WriteLog("O Arquivo " + TransFile + " contém linha vazia!")
+			WriteLog("O Arquivo [" + TransFile + "] contém linha vazia!")
 		}
+
 	} // quando ele quebrar o laco precisará fazer o ultimo registro
 
 	// fazendo a ultima posicao do vetor
@@ -356,7 +408,7 @@ func CalcularSaldoTransacoes(TransFile string) error {
 		if SaldoIString == "" {
 
 			// mensagem de erro caso nao encontre o id da conta para pegar o saldo inicial
-			textError := "O Arquivo " + TransFile + " não foi encontrado o saldo da conta " + idContaTemp + " não foi encontrado no banco de dados!"
+			textError := "O Arquivo [" + TransFile + "] não foi encontrado o saldo da conta [" + idContaTemp + "] não foi encontrado no banco de dados!"
 			// err := errors.New(textError)
 
 			// gerar log de erro
@@ -472,6 +524,8 @@ func LerFileTransactionSaveDb(TransFile string) error {
 	return scanner.Err()
 }
 
+// funcao responsavel por varrer o vetor com as transacoes e efetuar os calculos conforme
+// a descricao do projeto
 func CalcularBalanco(idContaTemp string, VetorTransacao []float64, SaldoFloatTotal float64) {
 
 	// Encontrou outro codigo cliente
