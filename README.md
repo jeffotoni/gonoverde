@@ -31,6 +31,8 @@ Foi usado um noSql para não estourar memória em casos de arquivos muito grande
 
 Quando fazemos a leitura dos arquivos não estamos jogando tudo na memória, estamos lendo e percorrendo o arquivo linha a linha, otimizando nosso processo de leitura e cálculos.
 
+Os cálculos quando estamos percorrendo o arquivo de transações é armazenado em memória um bloco contendo as transações de um único cliente, e o mesmo vetor é limpo a cada novo cliente.
+
 ```go
 - gonoverde
  - gbolt
