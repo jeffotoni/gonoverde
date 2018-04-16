@@ -65,13 +65,13 @@ O programa está fazendo algumas validações para manter a integridade dos cál
 
 O arquivo de transações está ordenado por id da conta ou seja:
 
-200,3450
-200,100
-200,-200
-200,1000
-201,100
-201,230
-201,-300
+	- 200,3450
+	- 200,100
+	- 200,-200
+	- 200,1000
+	- 201,100
+	- 201,230
+	- 201,-300
 
 Algumas delas:
 
