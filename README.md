@@ -83,14 +83,14 @@ $ ./main-gerar
 
 ```
 //uma forma de executar
-$ go run gonoverde.go contas.csv transacoes.csv
+$ go run main.go contas.csv transacoes.csv
 
 // pode compilar
-$ go build gonoverde.go
+$ go build main.go
 
-$ ./gonoverde contas.csv transacoes.csv
+$ ./main contas.csv transacoes.csv
 
-$ sudo cp gonoverde /usr/bin
+$ sudo cp main /usr/bin/gonoverde
 
 $ gonoverde contas.csv transacoes.csv
 
