@@ -59,6 +59,22 @@ Os cálculos quando estamos percorrendo o arquivo de transações é armazenado 
    - gonoverde-balanco.go      (lib responsável por gerar o balanco das contas) 
 
 ```
+### Regras e Validações
+
+O programa está fazendo algumas validações para manter a integridade dos cálculos.
+
+Algumas delas:
+
+	- Para rodar o balanço é necessário passar os dois parametros para o programa contendo o path dos arquivos contas.csv e transacoes.csv
+	- O nome dos arquivos tem que ser exatamente estes [contas.csv] e [transacoes.csv]
+	- Os arquivos gerados é uma simulação para que possamos testar os resultados do programa
+	- Os arquivos são gerados sem erros, então podemos editar os arquivos e forçar alguns erros
+	- Validações para checar linhas vazias
+	- Validações para ter certeza que temos somente uma virgula em cada linha separando id da conta do saldo ou transação
+	- Validação para checar se os valores são somente números, não é permitido caracteres ou alfanuméricos
+	- Validação para checar se o id da conta existe realmente em contas.csv
+	- Conversões e validações para números com casas decimais
+
 
 ### Executando gonoverde com Docker
 
