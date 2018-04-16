@@ -56,7 +56,7 @@ $ git clone github.com/jeffotoni/gonoverde
 
 ### Gerando Arquivos contas.csv e transacoes.csv
 
-Caso tenha os arquivos, não precisará executar esta etapa, basta copia-los para src/gonoverde
+Caso tenha os arquivos, não precisará executar esta etapa, basta copia-los para **src/gonoverde**
 
 Caso necessite gera-los, o programa gera os dois arquivos, onde contas terá os saldos iniciais das contas e não irá repetir no arquivo de contas, o arquivo de transações irá possuir varias transações de cada conta, os arquivos estão ordenados pelo id da conta.
 
@@ -82,7 +82,11 @@ $ ./main-gerar
 ### Calcular Balanço de conta Corrente
 
 ```
-// uma forma de executar
+// entrando no diretorio
+// para executar ou compilar
+$ cd src/gonoverde
+
+// uma forma de executar com run
 $ go run main.go contas.csv transacoes.csv
 
 // pode compilar
