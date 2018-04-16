@@ -23,6 +23,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	//"strings"
 	//"time"
 )
 
@@ -82,12 +83,36 @@ func SaldoContaCliente(ContasFile, TransFile string) {
 		os.Exit(0)
 	}
 
+	// Caso tenhamos que ordenar o arquivo de
+	// transacoes, este metodo faz com que
+	// o arquivo seja salvo em banco
+	// as transacoes serao gravadas
+	// para o mesmo id conta, usamos um separador
+	// para concatenar os valores
+	// errs = LerFileTransactionSaveDb(TransFile)
+
+	// exemplo:
+	//fmt.Println("Base de dados carregada transacoes")
+	// fmt.Println("Dado: ", gbolt.Get("trans_10", BDTrans))
+	// Vetor := strings.Split(gbolt.Get("trans_10", BDTrans), ";")
+	// for _, val := range Vetor {
+	// 	fmt.Println(val)
+	// }
+
+	// if errs != nil {
+	// 	fmt.Println("Error ao ler aquivo " + TransFile + " não poderemos continuar!")
+	// 	log.Println(errs)
+	// 	os.Exit(0)
+	// }
+
+	// os.Exit(0)
+
 	// fmt.Println("")
 	// fmt.Println("Contas Salvas no Bolt")
 	// fmt.Println("Iniciando leitura do arquivo de transações")
 	// fmt.Println("")
-	//time.Sleep(time.Millisecond * 50)
 
+	// lendo o arquivo de transacoes.csv
 	// agora vamos ler as transacoes e fazer os calculos para apresentar na tela
 	// para ler as transacoes iremos ler linha a linha para não estourar nossa
 	// memória com milhares de registros
@@ -247,9 +272,6 @@ func CalcularSaldoTransacoes(TransFile string) error {
 				// convertendo valor da transacao em float
 				ValorTransacaoFloat = StringToFloat(ValorTransacaoStr)
 
-				// fmt.Println("Conta: ", idConta)
-				// fmt.Println("transacao: ", ValorTransacaoStr)
-
 				// entrando
 				// pela primeira
 				// vez
@@ -297,82 +319,8 @@ func CalcularSaldoTransacoes(TransFile string) error {
 						// saldo total
 						SaldoFloatTotal = SaldoFloatTotal + SaldoInicialFloat
 
-						// saldo da conta
-
-						//fmt.Println(YellowCor("Saldo Inicial"))
-						//fmt.Println(SaldoFloatTotal)
-
-						// v0 := 50021.70
-						// v1 := -55040.89
-						// T := v0 + (v1)
-						// fmt.Println(FloatToStringVirgula(T, 2))
-
-						//fmt.Println(SaldoInicialFloat)
-						//os.Exit(0)
-						// Encontrou outro codigo cliente
-						// Percorre o vetor faz os calculos do vetor e do cliente anterior
-						// Limpa o vetor e inicia seu preenchimento novamente
-						// com um novo codigo cliente
-						// Calculo do Saldo
-						for _, Tvalor := range VetorTransacao {
-
-							// O saldo de uma conta deve ser calculado a partir de seu saldo inicial, aplicando cada uma das
-							// transações relacionadas a esta conta. Depósitos devem aumentar o saldo da conta e débitos
-							// devem reduzir esse mesmo saldo, na medida do valor da transação.
-
-							// Uma conta pode​ assumir um valor negativo e não existe limite inferior para o saldo da conta.
-							// Contudo, cada transação de débito que termina deixando o saldo da conta negativo implica
-							// uma multa de R$ 5,00​ a ser descontada imediatamente. Esta multa se aplica independente da
-							// conta se encontrar ou não com saldo negativo antes da transação, mas não se aplica se a
-							// transação for um depósito
-
-							SaldoFloatTotal = SaldoFloatTotal + Tvalor
-
-							// converte para duas casas decimais
-							//FloatCasasDecimais(ValorSubAdd, 2)
-
-							//multa := 0
-
-							// saldo da conta negativa
-							// multa de R$ 5,00
-							// mas aplica somente em Debitos Negativos
-							// transacoes de deposito nao  se aplica
-							if SaldoFloatTotal < 0 && Tvalor < 0 {
-
-								//multa = -5
-
-								//neg = 1
-								//negativo subtrai
-								//fmt.Println("saldo da conta negativo: ", idContaTemp)
-								//fmt.Println(SaldoFloatTotal)
-
-								// converte para duas casas decimais
-								SaldoFloatTotal = SaldoFloatTotal - 5
-
-								//fmt.Println("Saldo com multa: ", SaldoFloatTotal)
-								//time.Sleep(time.Second * 1)
-							}
-
-							//fmt.Println(multa, ":", FloatToStringVirgula(Tvalor, 2), ":", FloatToStringVirgula(SaldoFloatTotal, 2))
-							//fmt.Println(Tvalor, ":", SaldoFloatTotal)
-						}
-
-						//if neg == 1 {
-
-						// apresentando resultado na tela
-						fmt.Println(YellowCor(idContaTemp + "," + FloatToStringClean(SaldoFloatTotal, 2)))
-
-						// total Saldo
-						//fmt.Println(YellowCor("saldo total da conta:"))
-						//fmt.Println(FloatToStringVirgula(SaldoFloatTotal, 2))
-						//fmt.Println("")
-						// neg = 0
-
-						//}
-
-						//time.Sleep(time.Second * 10)
-						//fmt.Println("Conta fim: ", idContaTemp)
-						//os.Exit(0)
+						// fazendo o calculo das transacoes
+						CalcularBalanco(idContaTemp, VetorTransacao, SaldoFloatTotal)
 
 						// limpar vetor
 						// iniciar novamente
@@ -384,14 +332,8 @@ func CalcularSaldoTransacoes(TransFile string) error {
 					}
 				}
 
-				// pegar o idConta e o valor da Transacao
-				//fmt.Println(linha)
-				//fmt.Println(idConta + "," + ValorTransacaoStr)
-				//fmt.Println("")
-
+				// pegar o idConta
 				idContaTemp = idConta
-
-				//fmt.Println(gbolt.Get())_
 
 			} else {
 
@@ -403,7 +345,168 @@ func CalcularSaldoTransacoes(TransFile string) error {
 
 			WriteLog("O Arquivo " + TransFile + " contém linha vazia!")
 		}
+	} // quando ele quebrar o laco precisará fazer o ultimo registro
+
+	// fazendo a ultima posicao do vetor
+	if len(VetorTransacao) > 0 {
+
+		// buscar saldo inicial da conta
+		SaldoIString = gbolt.Get(idContaTemp)
+
+		if SaldoIString == "" {
+
+			// mensagem de erro caso nao encontre o id da conta para pegar o saldo inicial
+			textError := "O Arquivo " + TransFile + " não foi encontrado o saldo da conta " + idContaTemp + " não foi encontrado no banco de dados!"
+			// err := errors.New(textError)
+
+			// gerar log de erro
+			WriteLog(textError)
+
+		} else {
+
+			// trasforma string em float do saldo
+			SaldoInicialFloat = StringToFloat(SaldoIString)
+
+			// saldo total
+			SaldoFloatTotal = SaldoFloatTotal + SaldoInicialFloat
+
+			// fazendo o calculo para escrever na tela
+			CalcularBalanco(idContaTemp, VetorTransacao, SaldoFloatTotal)
+		}
 	}
 
 	return scanner.Err()
+}
+
+// Esta funcao ira ler o arquivo linha a linha
+// não irá jogar tudo na memória, está otimizado
+// para salvar linha a linha no banco boltdb
+// o banco foi criado para otimizar a leitura
+// que iremos precisar fazer quando formos
+// ler as transacoes do cliente
+func LerFileTransactionSaveDb(TransFile string) error {
+
+	// variaveis declaradas para evitar declaracoes dentro do loop
+	var linha, idConta, SaldoInicialFloatString, SaldoInicialString string
+
+	// Abre o arquivo
+	arquivo, err := os.Open(TransFile)
+
+	// Caso tenha encontrado algum erro ao tentar abrir o arquivo retorne o erro encontrado
+	if err != nil {
+		return err
+	}
+
+	// Garante que o arquivo sera fechado apos o uso
+	defer arquivo.Close()
+
+	// Cria um scanner que le cada linha do arquivo
+	scanner := bufio.NewScanner(arquivo)
+
+	// RuneTime()
+
+	// varrendo o arquivo
+	for scanner.Scan() {
+
+		// get linha
+		linha = scanner.Text()
+
+		if linha != "" {
+
+			// retornando dados da linha em string
+			idConta, SaldoInicialFloatString, SaldoInicialString = IdContaSaldoString(linha)
+
+			if idConta != "" && SaldoInicialString != "" {
+
+				// salvar somente se for int e nao conter caracteres indesejaveis
+				// conta e saldo tem que possuir somente numeros
+
+				re, _ := regexp.Compile(`[^0-9]`)
+
+				// verdadeiro significa que
+				// a string possui caracteres
+				// falso significa que possui
+				// somente numeros
+				if !re.MatchString(idConta) && !re.MatchString(SaldoInicialString) {
+
+					// chave dos ids transaction
+					keyT := "trans_" + idConta
+
+					// perguntar se existe primeiro
+					stringValores := gbolt.Get(keyT, BDTrans)
+
+					if stringValores == "" {
+
+						// salvar nova banco idConta => Saldo
+						gbolt.Save(keyT, SaldoInicialFloatString, BDTrans)
+
+					} else {
+
+						// concatenando os values para o id correspondente..
+						stringValores = stringValores + ";" + SaldoInicialFloatString
+
+						// salvando no banco
+						gbolt.Save(keyT, stringValores, BDTrans)
+					}
+
+				} else {
+
+					// gerar log de erro
+					WriteLog("O Arquivo " + TransFile + ", foi encontrado o Idconta ou Saldo errados => idConta: " + idConta + " Saldo: " + SaldoInicialString)
+				}
+			} else {
+
+				//gera log
+				WriteLog("O Arquivo " + TransFile + ", foi encontrado Idconta ou Saldo vazios => idConta: " + idConta + " Saldo: " + SaldoInicialString)
+			}
+		} else {
+
+			// gerar log
+			WriteLog("O Arquivo " + TransFile + " contém linha vazia!")
+		}
+	}
+
+	// encontrando
+	//fmt.Println("Contas Salvas com sucesso!")
+
+	return scanner.Err()
+}
+
+func CalcularBalanco(idContaTemp string, VetorTransacao []float64, SaldoFloatTotal float64) {
+
+	// Encontrou outro codigo cliente
+	// Percorre o vetor faz os calculos do vetor e do cliente anterior
+	// Limpa o vetor e inicia seu preenchimento novamente
+	// com um novo codigo cliente
+	// Calculo do Saldo
+	for _, Tvalor := range VetorTransacao {
+
+		// O saldo de uma conta deve ser calculado a partir de seu saldo inicial, aplicando cada uma das
+		// transações relacionadas a esta conta. Depósitos devem aumentar o saldo da conta e débitos
+		// devem reduzir esse mesmo saldo, na medida do valor da transação.
+
+		// Uma conta pode​ assumir um valor negativo e não existe limite inferior para o saldo da conta.
+		// Contudo, cada transação de débito que termina deixando o saldo da conta negativo implica
+		// uma multa de R$ 5,00​ a ser descontada imediatamente. Esta multa se aplica independente da
+		// conta se encontrar ou não com saldo negativo antes da transação, mas não se aplica se a
+		// transação for um depósito
+
+		SaldoFloatTotal = SaldoFloatTotal + Tvalor
+
+		// converte para duas casas decimais
+		//FloatCasasDecimais(ValorSubAdd, 2)
+
+		// saldo da conta negativa
+		// multa de R$ 5,00
+		// mas aplica somente em Debitos Negativos
+		// transacoes de deposito nao  se aplica
+		if SaldoFloatTotal < 0 && Tvalor < 0 {
+
+			// converte para duas casas decimais
+			SaldoFloatTotal = SaldoFloatTotal - 5
+		}
+	}
+
+	// apresentando resultado na tela
+	fmt.Println(YellowCor(idContaTemp + "," + FloatToStringClean(SaldoFloatTotal, 2)))
 }

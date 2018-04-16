@@ -14,11 +14,14 @@
 
 package gonoverde
 
+// constante de todo sistema
 const (
+	BDContas    = "DBGonoverde"
+	BDTrans     = "DBGonoverdeTransaction"
 	FCONTAS     = "contas.csv"
 	FTRANSACOES = "transacoes.csv"
 	FILELOG     = "logsys.log"
-	LINHAS      = 100000
+	LINHAS      = 100
 )
 
 // var Error error

@@ -41,6 +41,12 @@ import (
 	"github.com/boltdb/bolt"
 )
 
+// constante do banco
+const (
+	BDContas = "DBGonoverde"
+	BDTrans  = "DBGonoverdeTransaction"
+)
+
 // Objects that define the database, directory where it will
 // contain the file that is all in the no-sql storage.
 //
@@ -50,9 +56,10 @@ import (
 // this further extends our possibilities for more
 // robust deployments with no-sql.
 var (
-	Database = []byte("DBGonoverde")
-	DirDb    = "db"
-	PathDb   = "db/gbolt.db"
+	DatabaseC = []byte(BDContas)
+	DatabaseT = []byte(BDTrans)
+	DirDb     = "db"
+	PathDb    = "db/gbolt.db"
 )
 
 // Our struct for boltdb connection,
@@ -98,7 +105,7 @@ func DropDatabase() {
 	// tratando erro
 	if err != nil {
 		log.Println(err)
-		//os.Exit(1)
+		//os.Exit(0)
 	}
 
 	// constuindo path banco
@@ -192,6 +199,143 @@ func ExistDb(name string) bool {
 	return true
 }
 
+// Save This method is responsible for saving on boltdb
+func Save(keyS, valueS string, opcional ...string) error {
+
+	DataBaseTmp := DatabaseC
+	// if len(opcional) > 0 {
+
+	// 	if opcional[0] == BDTrans {
+
+	// 		DataBaseTmp = DatabaseT
+
+	// 	} else {
+
+	// 		fmt.Println("erro try save, database nao encontrada!", err)
+	// 		os.Exit(0)
+	// 	}
+	// }
+
+	db := Connect()
+
+	//defer db.Close()
+
+	key := []byte(keyS)
+	value := []byte(valueS)
+
+	err := db.Update(func(tx *bolt.Tx) error {
+
+		bucket, err := tx.CreateBucketIfNotExists(DataBaseTmp)
+
+		if err != nil {
+
+			return err
+		}
+
+		err = bucket.Put(key, value)
+
+		if err != nil {
+
+			return err
+
+		} else {
+
+			//fmt.Println("save sucess")
+			return nil
+		}
+	})
+
+	if err != nil {
+
+		fmt.Println("erro try save ", err)
+		os.Exit(0)
+	}
+
+	return nil
+}
+
+// Get This method returns a string result as the last key
+func Get(keyS string, opcional ...string) string {
+
+	DataBaseTmp := DatabaseC
+	// if len(opcional) > 0 {
+
+	// 	if opcional[0] == BDTrans {
+
+	// 		DataBaseTmp = DatabaseT
+
+	// 	} else {
+
+	// 		fmt.Println("erro try get, database nao encontrada!", err)
+	// 		os.Exit(0)
+	// 	}
+	// }
+
+	db := Connect()
+
+	//defer db.Close()
+
+	key := []byte(keyS)
+
+	var valbyte []byte
+
+	err = db.View(func(tx *bolt.Tx) error {
+
+		bucket := tx.Bucket(DataBaseTmp)
+
+		if bucket == nil {
+			return fmt.Errorf("Bucket %q not found!", DataBaseTmp)
+		}
+
+		valbyte = bucket.Get(key)
+
+		return nil
+	})
+
+	if err != nil {
+
+		log.Fatal("Error open db, ", err)
+	}
+
+	return string(valbyte)
+}
+
+// using ListAllKeys
+// Method responsible for listing all key parts
+// and their respective values, in the bucket
+// that is configured.
+func ListAllKeys() error {
+
+	db := Connect()
+
+	if ExistDb(PathDb) {
+
+		fmt.Println("Exist", db)
+
+	} else {
+
+		fmt.Println("Not exist!")
+		os.Exit(0)
+	}
+
+	db.View(func(tx *bolt.Tx) error {
+
+		// Assume bucket exists and has keys
+		b := tx.Bucket([]byte(DatabaseC))
+
+		c := b.Cursor()
+
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+
+			fmt.Printf("key=%s, value=%s\n", k, v)
+		}
+
+		return nil
+	})
+
+	return nil
+}
+
 // SaveDb This method prepares the whole json string to save in boltdb
 func SaveDb(keyfile string, namefile string, sizefile int64, pathFile string) error {
 
@@ -231,9 +375,9 @@ func JsonGet(keyS string) string {
 
 	err = db.View(func(tx *bolt.Tx) error {
 
-		bucket := tx.Bucket(Database)
+		bucket := tx.Bucket(DatabaseC)
 		if bucket == nil {
-			return fmt.Errorf("Bucket %q not found!", Database)
+			return fmt.Errorf("Bucket %q not found!", DatabaseC)
 		}
 
 		valbyte = bucket.Get(key)
@@ -259,116 +403,6 @@ func JsonGet(keyS string) string {
 	}
 
 	return string(valbyte)
-}
-
-// Save This method is responsible for saving on boltdb
-func Save(keyS string, valueS string) error {
-
-	db := Connect()
-
-	//defer db.Close()
-
-	key := []byte(keyS)
-	value := []byte(valueS)
-
-	err := db.Update(func(tx *bolt.Tx) error {
-
-		bucket, err := tx.CreateBucketIfNotExists(Database)
-
-		if err != nil {
-
-			return err
-		}
-
-		err = bucket.Put(key, value)
-
-		if err != nil {
-
-			return err
-
-		} else {
-
-			//fmt.Println("save sucess")
-			return nil
-		}
-	})
-
-	if err != nil {
-
-		fmt.Println("erro try save ", err)
-		os.Exit(1)
-	}
-
-	return nil
-}
-
-// Get This method returns a string result as the last key
-func Get(keyS string) string {
-
-	db := Connect()
-
-	//defer db.Close()
-
-	key := []byte(keyS)
-
-	var valbyte []byte
-
-	err = db.View(func(tx *bolt.Tx) error {
-
-		bucket := tx.Bucket(Database)
-
-		if bucket == nil {
-			return fmt.Errorf("Bucket %q not found!", Database)
-		}
-
-		valbyte = bucket.Get(key)
-
-		return nil
-	})
-
-	if err != nil {
-
-		log.Fatal("Error open db, ", err)
-	}
-
-	return string(valbyte)
-}
-
-// using ListAllKeys
-// Method responsible for listing all key parts
-// and their respective values, in the bucket
-// that is configured.
-func ListAllKeys() error {
-
-	db := Connect()
-
-	if ExistDb(PathDb) {
-
-		fmt.Println("Exist", db)
-
-	} else {
-
-		fmt.Println("Not exist!")
-		os.Exit(1)
-	}
-
-	db.View(func(tx *bolt.Tx) error {
-
-		// Assume bucket exists and has keys
-		b := tx.Bucket([]byte(Database))
-
-		c := b.Cursor()
-
-		for k, v := c.First(); k != nil; k, v = c.Next() {
-
-			fmt.Printf("key=%s, value=%s\n", k, v)
-		}
-
-		return nil
-	})
-
-	return nil
-
 }
 
 // using checkError Test the errors
