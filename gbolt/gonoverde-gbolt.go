@@ -87,6 +87,25 @@ type JsonDataDb struct {
 var djson JsonDataDb
 var db2 *DB
 
+// removendo a base de dados
+func DropDatabase() {
+
+	// get path local
+	pwd, err := os.Getwd()
+
+	// tratando erro
+	if err != nil {
+		log.Println(err)
+		//os.Exit(1)
+	}
+
+	// constuindo path banco
+	pwd = pwd + "/" + PathDb
+
+	//removendo banco
+	RemoveFile(pwd)
+}
+
 // using Connect
 // This method is what does
 // and returns our instance for access
@@ -357,4 +376,37 @@ func checkError(err error) {
 		fmt.Println("Error Database: ", err.Error())
 		os.Exit(0)
 	}
+}
+
+// removendo files
+func RemoveFile(File string) (err error) {
+
+	// if o arquivo existir
+	// apagar para gerar
+	// uma nova versao
+	if ExistsFile(File) {
+
+		//matando o arquivo
+		err = os.Remove(File)
+		// tratando o erro
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+
+	return
+}
+
+// Exists file in disck
+func ExistsFile(file string) bool {
+
+	if _, err := os.Stat(file); err != nil {
+
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+
+	return true
 }

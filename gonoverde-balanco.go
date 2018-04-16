@@ -41,6 +41,11 @@ func SaldoContaCliente(ContasFile, TransFile string) {
 	// execucao
 	WriteLogClean()
 
+	// apagando a base
+	// de dados para
+	// gerar uma nova
+	gbolt.DropDatabase()
+
 	// Testing boltdb database
 	// Start ping database
 	// Creating ping ok
