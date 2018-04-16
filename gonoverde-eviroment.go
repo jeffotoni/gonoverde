@@ -21,7 +21,7 @@ const (
 	FCONTAS     = "contas.csv"
 	FTRANSACOES = "transacoes.csv"
 	FILELOG     = "logsys.log"
-	LINHAS      = 100000
+	LINHAS      = 30000
 )
 
 // var Error error
