@@ -96,14 +96,14 @@ func main() {
 	// com idconta e saldo inicial
 	for i := 1; i <= LINHAS; i++ {
 
-		//randValor := Random(10, 10000)
+		// saldo conta
 		randSaldo := Random(1, 100000)
 
 		// transacao positiva
-		randSaldoTr := Random(1, 1000)
+		randSaldoTr := Random(1, 100000)
 
 		// transacao negativa
-		randSaldoTrN := Random(10, 800)
+		randSaldoTrN := Random(10, 80000)
 
 		// saldo sendo gerado aleatorio
 		saldoi = RandomF() * float64(randSaldo)

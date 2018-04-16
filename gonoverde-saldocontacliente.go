@@ -32,6 +32,10 @@ var errs error
 // de saldo e apresentar na tela
 func SaldoContaCliente(ContasFile, TransFile string) {
 
+	// ascii
+	// loader
+	// RuneTime()
+
 	// limpando o log
 	// e iniciando nova
 	// execucao
@@ -53,9 +57,8 @@ func SaldoContaCliente(ContasFile, TransFile string) {
 	}
 
 	// boltdb testado e ok
-	fmt.Println(CyanCor("Bolt Testado e funcionando.."))
-
-	fmt.Println(PurpleCor("Debita e deposita na conta do cliente"))
+	//fmt.Println(CyanCor("Bolt Testado e funcionando.."))
+	//fmt.Println(PurpleCor("Salvando Contas no banco de dados Bolt"))
 
 	// Iremos ler todo arquivo de contas.csv e coloca-lo no banco noSql boltdb
 	// Apos gerar o banco de dados contas, iremos abrir e percorrer o arquivo
@@ -72,6 +75,12 @@ func SaldoContaCliente(ContasFile, TransFile string) {
 		log.Println(errs)
 		os.Exit(0)
 	}
+
+	// fmt.Println("")
+	// fmt.Println("Contas Salvas no Bolt")
+	// fmt.Println("Iniciando leitura do arquivo de transações")
+	// fmt.Println("")
+	//time.Sleep(time.Millisecond * 50)
 
 	// agora vamos ler as transacoes e fazer os calculos para apresentar na tela
 	// para ler as transacoes iremos ler linha a linha para não estourar nossa
@@ -118,7 +127,7 @@ func LerFileSaveDb(ContasFile string) error {
 	// Cria um scanner que le cada linha do arquivo
 	scanner := bufio.NewScanner(arquivo)
 
-	fmt.Println(YellowCor("... Lendo " + ContasFile + " e salvando no banco! ..."))
+	//fmt.Println(YellowCor("... Lendo " + ContasFile + " e salvando no banco! ..."))
 	// RuneTime()
 
 	// varrendo o arquivo
@@ -166,7 +175,7 @@ func LerFileSaveDb(ContasFile string) error {
 	}
 
 	// encontrando
-	fmt.Println("Contas Salvas com sucesso!")
+	//fmt.Println("Contas Salvas com sucesso!")
 
 	return scanner.Err()
 }
@@ -204,8 +213,8 @@ func CalcularSaldoTransacoes(TransFile string) error {
 	scanner := bufio.NewScanner(arquivo)
 
 	// lendo arquivos e mostrando na tela
-	fmt.Println(YellowCor("..... Lendo " + TransFile + " e efetuando os Cálculos de Saldo! ....."))
-	fmt.Println("")
+	// fmt.Println(YellowCor("..... Lendo " + TransFile + " e efetuando os Cálculos de Saldo! ....."))
+	// fmt.Println("")
 
 	// RuneTime()
 	// varrendo o arquivo
@@ -332,7 +341,8 @@ func CalcularSaldoTransacoes(TransFile string) error {
 
 						//if neg == 1 {
 
-						fmt.Println(idContaTemp + "," + FloatToStringClean(SaldoFloatTotal, 2))
+						// apresentando resultado na tela
+						fmt.Println(YellowCor(idContaTemp + "," + FloatToStringClean(SaldoFloatTotal, 2)))
 
 						// total Saldo
 						//fmt.Println(YellowCor("saldo total da conta:"))

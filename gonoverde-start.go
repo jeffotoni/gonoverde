@@ -66,8 +66,7 @@ func Start() {
 				return
 			}
 
-			fmt.Println(YellowCor("Pode Executar"))
-
+			// fmt.Println(YellowCor("Pode Executar"))
 			// iniciar o Calculo
 			// do saldo de cada
 			// conta
