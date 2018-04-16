@@ -20,23 +20,23 @@ Esta multa se aplica independente da conta se encontrar ou não com saldo  egati
 
 ```go
 - gonoverde
-	- gbolt
-		- gonoverde-gbolt.go    (biblioteca para abstrar alguns comandos do bolt noSql)
-	- src
-		- gonoverde
-			- dockerfile        (poderá executar o programa em um container)
-			- contas.csv        (arquivo contas gerado a partir do main-gerar.go)
-			- transacoes.csv    (arquivo transacoes gerado a partir do main-gerar.go)
-			- logsys.log        (este arquivo é gerado se existir algum erro ao ler os arquivos contas e transações)
-			- main-gerar.go     (programa responsavel por gerar uma base para simulacao do nosso problema) 
-			- main.go           (programa principal responsavel por fazer nosso balanço de conta corrente)
-	
-	- gonoverde-write-log.go    (biblioteca para gerar log) 
-	- gonoverde-runetime.go     (responsavel por fazer um loader ascii)  
-	- gonoverde-eviroment.go    (algumas variaveis de ambiente)
-	- gonoverde-start.go        (nesta lib irá tratar as entradas cmd)
-	- gonoverde-util.go         (lib responsável por conter algumas funções de conversão)
-	- gonoverde-balanco.go      (lib responsável por gerar o balanco das contas correntes dos clientes) 
+- gbolt
+	- gonoverde-gbolt.go    (biblioteca para abstrar alguns comandos do bolt noSql)
+- src
+	- gonoverde
+		- dockerfile        (poderá executar o programa em um container)
+		- contas.csv        (arquivo contas gerado a partir do main-gerar.go)
+		- transacoes.csv    (arquivo transacoes gerado a partir do main-gerar.go)
+		- logsys.log        (este arquivo é gerado se existir algum erro ao ler os arquivos contas e transações)
+		- main-gerar.go     (programa responsavel por gerar uma base para simulacao do nosso problema) 
+		- main.go           (programa principal responsavel por fazer nosso balanço de conta corrente)
+
+- gonoverde-write-log.go    (biblioteca para gerar log) 
+- gonoverde-runetime.go     (responsavel por fazer um loader ascii)  
+- gonoverde-eviroment.go    (algumas variaveis de ambiente)
+- gonoverde-start.go        (nesta lib irá tratar as entradas cmd)
+- gonoverde-util.go         (lib responsável por conter algumas funções de conversão)
+- gonoverde-balanco.go      (lib responsável por gerar o balanco das contas correntes dos clientes) 
 
 ```
 
@@ -57,7 +57,7 @@ $ sudo docker pull jeffotoni/gonoverde
 $ sudo docker run -itd --rm --name gonoverde -v /tmp/gonoverde:/tmp jeffotoni/gonoverde:latest
 
 // o comando abaixo ele irá executar o programa e gerar o balanço
-$ sudo docker exec idcontainer gonoverde /tmp/contas.csv /tmp/transacoes.csv
+$ sudo docker exec <idcontainer> gonoverde /tmp/contas.csv /tmp/transacoes.csv
 
 ```
 
