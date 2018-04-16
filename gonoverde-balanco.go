@@ -16,7 +16,7 @@ package gonoverde
 
 import (
 	"bufio"
-	"errors"
+	// "errors"
 	"fmt"
 	. "github.com/jeffotoni/gcolor"
 	"github.com/jeffotoni/gonoverde/gbolt"
@@ -283,12 +283,12 @@ func CalcularSaldoTransacoes(TransFile string) error {
 
 							// mensagem de erro caso nao encontre o id da conta para pegar o saldo inicial
 							textError := "O Arquivo " + TransFile + " não foi encontrado o saldo da conta " + idContaTemp + " não foi encontrado no banco de dados!"
-							err := errors.New(textError)
+							// err := errors.New(textError)
 
 							// gerar log de erro
 							WriteLog(textError)
 
-							return err
+							continue
 						}
 
 						// trasforma string em float do saldo
