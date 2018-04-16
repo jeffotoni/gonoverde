@@ -28,12 +28,14 @@ Esta multa se aplica independente da conta se encontrar ou não com saldo  egati
 			- main.go
 			- contas.csv
 			- transacoes.csv
-
+	
+	- gonoverde-write-log.go
+	- gonoverde-runetime.go
 	- gonoverde-eviroment.go
-	- gonoverde-saldocontacliente.go
 	- gonoverde-start.go
 	- gonoverde-util.go
-	
+	- gonoverde-saldocontacliente.go
+
 ```
 
 ### Instalar Dependencias para o projeto
@@ -41,20 +43,24 @@ Esta multa se aplica independente da conta se encontrar ou não com saldo  egati
 ```
 $ go get -v github.com/jeffotoni/gcolor
 
-$ got get -u github.com/boltdb/bolt
+$ go get -u github.com/boltdb/bolt
 
 ```
 
 ### Baixando o projeto no GitHub
 
 ```
-git clone github.com/jeffotoni/gonoverde
+$ git clone github.com/jeffotoni/gonoverde
 
 ```
 
 ### Gerando Arquivos contas.csv e transacoes.csv
 
-Será gerado dois arquivos, onde contas terá os saldos iniciais das contas e não irá repetir no arquivo de contas, o arquivo de transações irá possuir varias transações de cada conta, os arquivos estão ordenados pelo id da conta.
+Caso tenha os arquivos, não precisará executar esta etapa, basta copia-los para src/gonoverde
+
+Caso necessite gera-los, o programa gera os dois arquivos, onde contas terá os saldos iniciais das contas e não irá repetir no arquivo de contas, o arquivo de transações irá possuir varias transações de cada conta, os arquivos estão ordenados pelo id da conta.
+
+O arquivo de transacoes.csv está ordenado pelo IdConta.
 
 ```
 // entrando no src
@@ -83,5 +89,9 @@ $ go run gonoverde.go contas.csv transacoes.csv
 $ go build gonoverde.go
 
 $ ./gonoverde contas.csv transacoes.csv
+
+$ sudo cp gonoverde /usr/bin
+
+$ gonoverde contas.csv transacoes.csv
 
 ```
