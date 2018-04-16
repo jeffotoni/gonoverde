@@ -43,34 +43,13 @@ func main() {
 
 	//go func() {
 
-	// if o arquivo existir
-	// apagar para gerar
-	// uma nova versao
-	if ExistsFile(FCONTAS) {
+	// removendo file
+	// iniciando novamente
+	RemoveFile(FCONTAS)
 
-		//matando o arquivo
-		err := os.Remove(FCONTAS)
-		// tratando o erro
-		if err != nil {
-			log.Println(err)
-			return
-		}
-	}
-
-	// if o arquivo existir
-	// apagar para gerar
-	// uma nova versao
-	if ExistsFile(FTRANSACOES) {
-
-		//matando o arquivo
-		err := os.Remove(FTRANSACOES)
-
-		// tratando o erro
-		if err != nil {
-			log.Println(err)
-			return
-		}
-	}
+	// removendo file
+	// iniciando novamente
+	RemoveFile(FTRANSACOES)
 
 	// if o arquivo nao existe cria e faz append no conteudo adicionado
 	f, err := os.OpenFile(FCONTAS, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)

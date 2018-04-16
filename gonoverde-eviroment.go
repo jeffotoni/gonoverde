@@ -17,5 +17,8 @@ package gonoverde
 const (
 	FCONTAS     = "contas.csv"
 	FTRANSACOES = "transacoes.csv"
+	FILELOG     = "logsys.log"
 	LINHAS      = 100000
 )
+
+// var Error error

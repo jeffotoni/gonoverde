@@ -23,6 +23,26 @@ import (
 	"strings"
 )
 
+// removendo files
+func RemoveFile(File string) (err error) {
+
+	// if o arquivo existir
+	// apagar para gerar
+	// uma nova versao
+	if ExistsFile(File) {
+
+		//matando o arquivo
+		err = os.Remove(File)
+		// tratando o erro
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	}
+
+	return
+}
+
 // Exists file in disck
 func ExistsFile(file string) bool {
 
@@ -125,7 +145,7 @@ func StringToFloat(valorString string) (Resultado float64) {
 
 // convertendo string int para transformar em float e com casas decimais
 // retorna uma string com o formato correto do valor que esta em string
-func IdContaSaldoString(linha string) (idConta string, SaldoFloatString string) {
+func IdContaSaldoString(linha string) (idConta, SaldoFloatString, SaldoString string) {
 
 	// linha
 	// id conta
@@ -141,16 +161,16 @@ func IdContaSaldoString(linha string) (idConta string, SaldoFloatString string) 
 		idConta = vetorConta[0]
 
 		// get saldo
-		stringSaldo := vetorConta[1]
+		SaldoString := vetorConta[1]
 
 		// colocar ponto nas duas ultimas posicoes
 		// gerando casas decimais da string
 
 		// somente o decimal sem as casas decimais
-		stringSaldoBody := stringSaldo[:len(stringSaldo)-2]
+		stringSaldoBody := SaldoString[:len(SaldoString)-2]
 
 		// somente o algarismo apos a virgula casas decimais
-		stringSaldoDecimal := Substr(stringSaldo, len(stringSaldo)-2, 2)
+		stringSaldoDecimal := Substr(SaldoString, len(SaldoString)-2, 2)
 
 		// gerando o saldo em float, com as casas decimais para efetuar os calculos
 		Saldo := StringToSaldoWithDecimal(stringSaldoBody, stringSaldoDecimal)
@@ -159,10 +179,14 @@ func IdContaSaldoString(linha string) (idConta string, SaldoFloatString string) 
 		// float com duas casas decimais
 		SaldoFloatString = FloatToString(Saldo, 2)
 
-		return
+		// removendo negativo do registro saldo ou transacao
+		valorClean := strings.Replace(SaldoString, "-", "", -1)
+
+		//retornando dados da linha
+		return idConta, SaldoFloatString, valorClean
 
 	} else {
 
-		return "", ""
+		return "", "", ""
 	}
 }
