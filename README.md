@@ -8,6 +8,11 @@ O programa **gonoverde** gera os dois arquivos contas.csv e transacoes.csv já n
 
 Uma transação de valor positivo é um depósito​ na conta. Uma transação de valor negativo é um débito​ na conta.
 
+# Exemplo do funcionamento do programa
+
+![image](https://github.com/jeffotoni/gonoverde/blob/master/gifanimation/gonoverde.gif)
+
+
 ### Regras e Lógica do programa
 
 O saldo de uma conta deve ser calculado a partir de seu saldo inicial, aplicando cada uma das transações relacionadas a esta conta. Depósitos devem aumentar o saldo da conta e débitos devem reduzir esse mesmo saldo, na medida do valor da transação. 
