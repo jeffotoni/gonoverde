@@ -102,7 +102,7 @@ $ ./main-gerar
 
 ```
 
-### Calcular Balanço de conta Corrente
+### Executar e calcular balanço de conta Corrente
 
 ```
 // entrando no diretorio
