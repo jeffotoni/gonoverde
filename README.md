@@ -8,7 +8,7 @@ O programa **gonoverde** gera os dois arquivos contas.csv e transacoes.csv já n
 
 Uma transação de valor positivo é um depósito​ na conta. Uma transação de valor negativo é um débito​ na conta.
 
-# Exemplo do funcionamento do programa
+### Exemplo do funcionamento do programa
 
 ![image](https://github.com/jeffotoni/gonoverde/blob/master/gifanimation/gonoverde.gif)
 
