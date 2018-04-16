@@ -18,6 +18,19 @@ Esta multa se aplica independente da conta se encontrar ou não com saldo  egati
 
 ### Estrutura do Programa
 
+O **gonoverde** que é nosso **main.go** ele recebe sempre 2 argumentos, contas.csv e transacoes.csv ou você possui os arquivos ou pode executar o **main-gerar.go** para gerar os arquivos par você.
+
+O arquivo **transacoes.csv** tem que está **ordenado** pelo id da conta do cliente.
+
+O programa está gravando no banco todas as contas.csv onde possui os saldos iniciais de todos os clientes, logo após ele irá ler e fazer o balanço conforme as regras acima.
+Toda fez que executar o programa para gerar o balanço ele irá apagar toda base de dados gerada e limpar os logs.
+
+Todo erro encontrado é gerado um arquivo de log o nome dele é **logsys.log**.
+
+Foi usado um noSql para não estourar memória em casos de arquivos muito grandes e com noSql não há necessidade de colocarmos os dados do cliente na memória.
+
+Quando fazemos a leitura dos arquivos não estamos jogando tudo na memória, estamos lendo e percorrendo o arquivo linha a linha, otimizando nosso processo de leitura e cálculos.
+
 ```go
 - gonoverde
  - gbolt
