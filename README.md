@@ -82,7 +82,7 @@ $ ./main-gerar
 ### Calcular Balanço de conta Corrente
 
 ```
-//uma forma de executar
+// uma forma de executar
 $ go run main.go contas.csv transacoes.csv
 
 // pode compilar
@@ -90,8 +90,22 @@ $ go build main.go
 
 $ ./main contas.csv transacoes.csv
 
+// ou pode deixar no ambiente
 $ sudo cp main /usr/bin/gonoverde
 
+// lembrando que os arquivos tem que 
+// ser passados os paths ou os seus
+// respectivos nomes mas neste caso
+// os arquivos devem estar onde irá
+// executar
+
+// os arquivos tem que esta no path
+// que está executando
 $ gonoverde contas.csv transacoes.csv
+
+// passando path dos files não precisa
+// que os arquivos estejam no mesmo
+// path
+$ gonoverde /home/user/files/contas.csv /home/user/files/transacoes.csv
 
 ```
