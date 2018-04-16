@@ -63,6 +63,16 @@ Os cálculos quando estamos percorrendo o arquivo de transações é armazenado 
 
 O programa está fazendo algumas validações para manter a integridade dos cálculos.
 
+O arquivo de transações está ordenado por id da conta ou seja:
+
+200,3450
+200,100
+200,-200
+200,1000
+201,100
+201,230
+201,-300
+
 Algumas delas:
 
 	- Para rodar o balanço é necessário passar os dois parametros para o programa contendo o path dos arquivos contas.csv e transacoes.csv
