@@ -21,20 +21,43 @@ Esta multa se aplica independente da conta se encontrar ou não com saldo  egati
 ```go
 - gonoverde
 	- gbolt
-		- gonoverde-gbolt.go
+		- gonoverde-gbolt.go    (biblioteca para abstrar alguns comandos do bolt noSql)
 	- src
 		- gonoverde
-			- main-gerar.go
-			- main.go
-			- contas.csv
-			- transacoes.csv
+			- dockerfile        (poderá executar o programa em um container)
+			- contas.csv        (arquivo contas gerado a partir do main-gerar.go)
+			- transacoes.csv    (arquivo transacoes gerado a partir do main-gerar.go)
+			- logsys.log        (este arquivo é gerado se existir algum erro ao ler os arquivos contas e transações)
+			- main-gerar.go     (programa responsavel por gerar uma base para simulacao do nosso problema) 
+			- main.go           (programa principal responsavel por fazer nosso balanço de conta corrente)
 	
-	- gonoverde-write-log.go
-	- gonoverde-runetime.go
-	- gonoverde-eviroment.go
-	- gonoverde-start.go
-	- gonoverde-util.go
-	- gonoverde-saldocontacliente.go
+	- gonoverde-write-log.go    (biblioteca para gerar log) 
+	- gonoverde-runetime.go     (responsavel por fazer um loader ascii)  
+	- gonoverde-eviroment.go    (algumas variaveis de ambiente)
+	- gonoverde-start.go        (nesta lib irá tratar as entradas cmd)
+	- gonoverde-util.go         (lib responsável por conter algumas funções de conversão)
+	- gonoverde-balanco.go      (lib responsável por gerar o balanco das contas correntes dos clientes) 
+
+```
+
+### Executando gonoverde com Docker
+
+Caso desejar poderá baixar a imagem que é de 5M somente e rodar o programa gonoverde
+Você também poderá editar arquivo **dockerfile** gerar seu executável e construir sua própria imagem se assim desejar.
+
+Para baixar a imagem basta da pull ou run
+
+```
+// baixando a imagem, o comando abaixo 
+// caso preferir também baixa a imagem
+$ sudo docker pull jeffotoni/gonoverde
+
+// coloquei localmente os arquivos contas.csv e transacoes.csv no /tmp/gonoverde
+// no container irá para /tmp
+$ sudo docker run -itd --rm --name gonoverde -v /tmp/gonoverde:/tmp jeffotoni/gonoverde:latest
+
+// o comando abaixo ele irá executar o programa e gerar o balanço
+$ sudo docker exec idcontainer gonoverde /tmp/contas.csv /tmp/transacoes.csv
 
 ```
 

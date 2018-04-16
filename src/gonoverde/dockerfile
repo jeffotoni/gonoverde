@@ -1,0 +1,28 @@
+FROM alpine:3.7
+
+MAINTAINER Jefferson Otoni Lima <jeff.otoni@gmail.com>
+
+LABEL Description="This image is used to start the project avaliacao.com, Developed in golang" Vendor="Avaliacao" Version="1.0"
+
+RUN mkdir -p /go/bin
+
+RUN mkdir -p /go/gonoverde
+
+ADD gonoverde /go/bin/gonoverde
+
+RUN  chmod 755 /go/bin/gonoverde
+
+#  RUN ls -lh /go/*
+
+RUN export PATH="/go/bin:$PATH"
+
+ENV GOPATH /go
+
+ENV PATH $GOPATH/bin:/go/bin:$PATH
+
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+
+WORKDIR $GOPATH
+
+#ENTRYPOINT gmongocrud
+#EXPOSE 8181
